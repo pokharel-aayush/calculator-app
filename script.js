@@ -8,11 +8,13 @@ let resultShown = false; // Flag to check if result has been shown
 // Function to evaluate the expression
 function calculate() {
     try {
-        // Replace '%' with '/100' for percentage calculations
-        let expression = string.replace(/%/g, '/100');
+        // Replace special characters for evaluation
+        let expression = string.replace(/%/g, '/100')
+                               .replace(/×/g, '*')
+                               .replace(/÷/g, '/');
         
         // Prevent division by zero
-        if (expression.includes('/0')) {
+        if (expression.includes('/0') && !expression.includes('/0.')) {
             input.value = "Error";
             string = "";
         } else {
@@ -39,24 +41,34 @@ arr.forEach(button => {
         } else if (buttonText === 'AC') {
             string = "";
             input.value = string;
-            resultShown = false; // Reset the flag
+            resultShown = false;
         } else if (buttonText === 'DEL') {
             string = string.slice(0, -1);
             input.value = string;
+            resultShown = false;
         } else {
-            // Clear input only if result is shown and new input is a number
-            if (resultShown && /[0-9.]/.test(buttonText)) {
-                string = "";     // Reset string
-                resultShown = false; // Reset flag to allow new input
+            // If result is shown and user presses an operator, keep the result
+            if (resultShown && /[+\-*/%×÷]/.test(buttonText)) {
+                string += buttonText;
+                input.value = string;
+                resultShown = false;
+            } 
+            // If result is shown and user presses a number, start fresh
+            else if (resultShown && /[0-9.]/.test(buttonText)) {
+                string = buttonText;
+                input.value = string;
+                resultShown = false;
+            } 
+            // Normal input
+            else {
+                // Prevent consecutive operators
+                if (/[+\-*/%×÷]$/.test(string) && /[+\-*/%×÷]/.test(buttonText)) {
+                    return;
+                }
+                
+                string += buttonText;
+                input.value = string;
             }
-
-            // Prevent consecutive operators
-            if (/[+\-*/%]$/.test(string) && /[+\-*/%]/.test(buttonText)) {
-                return;
-            }
-
-            string += buttonText;
-            input.value = string;
         }
     });
 });
@@ -64,7 +76,7 @@ arr.forEach(button => {
 // Listen for Enter key in the input box
 input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        string = input.value;  // Update string with the current input value
-        calculate();           // Perform the calculation
+        string = input.value;
+        calculate();
     }
 });
