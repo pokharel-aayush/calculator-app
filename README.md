@@ -1,9 +1,11 @@
 # 🧮 Calculator App  
 *A responsive calculator built with HTML, CSS, and JavaScript.*  
 
-## Project Screenshot
-
-![Calculator App Screenshot](./images/calculator-screenshot.png)
+## 📸 UI Overview
+<div align="center">
+  <img src="./images/calculator-screenshot.png" alt="Calculator Interface" width="400">
+  <p><em>Standalone calculator interface showing default state</em></p>
+</div>
 
 ## ✨ Features  
 - Basic operations (+, -, *, /, %)  
